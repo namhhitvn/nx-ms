@@ -1,11 +1,11 @@
-import * as express from 'express';
+import { forceNumber, forceString } from '@nx-ms/common';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
+import * as express from 'express';
 import pinoHttp, { Options as pinoHttpOptions } from 'express-pino-logger';
 import { MSCore } from '../interfaces';
-import { forceNumber, forceString } from '@nx-ms/common';
 
-export interface BootstrapOptions {
+export interface AppBootstrapOptions {
   // app options
   appAutoListen?: boolean; // default: true
   appPort?: number; // default: process.env.APP_PORT || process.env.PORT || 3333
@@ -42,7 +42,10 @@ export interface BootstrapOptions {
 /**
  * It's a wrapper for `express()` that sets up some default middleware and options
  */
-export function bootstrap(options: BootstrapOptions, callback?: (app: express.Express) => void): express.Express {
+export function appBootstrap(
+  options: AppBootstrapOptions = {},
+  callback?: (app: express.Express) => void
+): express.Express {
   const app = express();
 
   // ref: https://github.com/expressjs/cors#configuration-options
@@ -122,4 +125,4 @@ export function bootstrap(options: BootstrapOptions, callback?: (app: express.Ex
   return app;
 }
 
-export default bootstrap;
+export default appBootstrap;

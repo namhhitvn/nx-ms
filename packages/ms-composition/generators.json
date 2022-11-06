@@ -1,0 +1,20 @@
+{
+  "generators": {
+    "node-application": {
+      "factory": "./src/generators/node-application/generator",
+      "schema": "./src/generators/node-application/schema.json",
+      "aliases": ["app"],
+      "x-type": "application",
+      "description": "Create a node application."
+    }
+  },
+  "schematics": {
+    "application": {
+      "factory": "./src/generators/node-application/generator#applicationSchematic",
+      "schema": "./src/generators/application/schema.json",
+      "aliases": ["app"],
+      "x-type": "application",
+      "description": "Create a node application."
+    }
+  }
+}

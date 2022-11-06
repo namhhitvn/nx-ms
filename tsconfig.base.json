@@ -17,7 +17,9 @@
     "typeRoots": ["node_modules/@types", "packages/common/@types"],
     "paths": {
       "@nx-ms/common": ["packages/common/src/index.ts"],
-      "@nx-ms/ms-composition": ["packages/ms-composition/src/index.ts"]
+      "@nx-ms/common/src/*": ["packages/common/src/*"],
+      "@nx-ms/ms-composition": ["packages/ms-composition/src/index.ts"],
+      "@nx-ms/ms-composition/src/*": ["packages/ms-composition/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

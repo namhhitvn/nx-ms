@@ -1,0 +1,19 @@
+{
+  "sourceRoot": "apps/example-todo-rest/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "development",
+      "configurations": {
+        "development": {
+          "command": "tsc-watch --noClear -p apps/example-todo-rest/tsconfig.app.json --onSuccess \"node --inspect=0.0.0.0:9229 -r source-map-support/register dist/example-todo-rest/apps/example-todo-rest/src/index.js\""
+        },
+        "production": {
+          "command": "tsc -p apps/example-todo-rest/tsconfig.app.json && node -r source-map-support/register dist/example-todo-rest/apps/example-todo-rest/src/index.js"
+        }
+      }
+    }
+  },
+  "tags": []
+}
