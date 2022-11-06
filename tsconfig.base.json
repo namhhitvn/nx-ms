@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "typeRoots": ["node_modules/@types", "packages/common/@types"],
+    "paths": {
+      "@nx-ms/common": ["packages/common/src/index.ts"],
+      "@nx-ms/ms-composition": ["packages/ms-composition/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
