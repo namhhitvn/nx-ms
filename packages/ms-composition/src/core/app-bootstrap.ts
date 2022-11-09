@@ -3,7 +3,10 @@ import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
 import pinoHttp, { Options as pinoHttpOptions } from 'express-pino-logger';
+import { MSRouter } from '../http';
+import { MSInterceptor } from '../http/interceptor';
 import { MSCore } from '../interfaces';
+import { AppEnvironment } from './app-environment';
 
 export interface AppBootstrapOptions {
   // app options
@@ -37,6 +40,12 @@ export interface AppBootstrapOptions {
   useStaticDefault?: boolean; // default: true
   staticPath?: string | string[] | { [endpoint: string]: string | string[] };
   staticConfig?: Parameters<typeof express.static>[1];
+
+  // routers
+  useRouters?: MSRouter[];
+
+  // interceptors
+  useInterceptors?: MSInterceptor[];
 }
 
 /**
@@ -47,6 +56,21 @@ export function appBootstrap(
   callback?: (app: express.Express) => void
 ): express.Express {
   const app = express();
+
+  (AppEnvironment.instance as WithWritable<AppEnvironment>).bootstrapOptions = options;
+
+  // ref: https://github.com/pinojs/express-pino-logger
+  if (options.usePinoHttp !== false) {
+    app.use(
+      pinoHttp({
+        ...options.pinoHttpOptions,
+      })
+    );
+  }
+
+  if (options.useInterceptors?.length) {
+    options.useInterceptors.forEach((interceptor) => interceptor.apply(app));
+  }
 
   // ref: https://github.com/expressjs/cors#configuration-options
   if (options.useCORS) {
@@ -81,11 +105,6 @@ export function appBootstrap(
     app.use(cookieParser(options.parseCookieSecret, options.parseCookieOptions));
   }
 
-  // ref: https://github.com/pinojs/express-pino-logger
-  if (options.usePinoHttp !== false) {
-    app.use(pinoHttp(options.pinoHttpOptions));
-  }
-
   // ref: https://expressjs.com/en/4x/api.html#express.static
   if (options.useStaticDefault !== false) {
     if (
@@ -106,6 +125,10 @@ export function appBootstrap(
     }
   }
 
+  if (options.useRouters?.length) {
+    options.useRouters.forEach((use) => use.assignRouter(app));
+  }
+
   if (options.appAutoListen !== false) {
     const appPort = forceNumber(
       options.appPort || process.env['APP_PORT'] || process.env['PORT'],
@@ -116,6 +139,7 @@ export function appBootstrap(
     );
 
     app.listen(appPort, appHost, function () {
+      app.emit('bootstrap:listening');
       console.log(`App listening on ${appHost}:${appPort}`);
     });
   }

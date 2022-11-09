@@ -1,1 +1,2 @@
-export * from './http-rest';
+export * from './rest';
+export * from './router';

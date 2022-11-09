@@ -1,4 +1,4 @@
-import { isArray } from "lodash";
+import { isArray } from 'lodash';
 
 export function stringToArray<T = string>(target: string, def: T[] = []): T[] {
   if (isArray(target)) return target;

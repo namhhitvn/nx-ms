@@ -5,5 +5,13 @@
     "module": "commonjs",
     "types": ["jest", "node", "ms-global"]
   },
-  "include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts", "src/interfaces/core/core.ts", "src/interfaces/core.interface.ts", "src/interfaces/core.interface.ts"]
+  "include": [
+    "jest.config.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.d.ts",
+    "src/interfaces/core/core.ts",
+    "src/interfaces/core.interface.ts",
+    "src/interfaces/core.interface.ts"
+  ]
 }

@@ -2,7 +2,9 @@
   "name": "nx-ms",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prettify": "prettier --write ."
+  },
   "private": true,
   "dependencies": {
     "@types/cors": "2.8.12",

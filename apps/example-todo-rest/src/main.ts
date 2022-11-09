@@ -1,3 +1,8 @@
-import { appBootstrap } from '@nx-ms/ms-composition/src/core/app-bootstrap';
+import { appBootstrap, MSRestResponseInterceptor } from '@nx-ms/ms-composition';
 
-appBootstrap();
+import todoRest from './module/todo/todo-router';
+
+appBootstrap({
+  useRouters: [todoRest],
+  useInterceptors: [new MSRestResponseInterceptor()],
+});
