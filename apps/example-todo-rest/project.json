@@ -2,6 +2,12 @@
   "sourceRoot": "apps/example-todo-rest/src",
   "projectType": "application",
   "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": ["tsc -p apps/example-todo-rest/tsconfig.app.json"]
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "development",
@@ -12,6 +18,21 @@
         "production": {
           "command": "tsc -p apps/example-todo-rest/tsconfig.app.json && node -r source-map-support/register dist/example-todo-rest/apps/example-todo-rest/src/index.js"
         }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/example-todo-rest/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/example-todo-rest"],
+      "options": {
+        "jestConfig": "apps/example-todo-rest/jest.config.ts",
+        "passWithNoTests": true
       }
     }
   },

@@ -1,3 +1,5 @@
 import { appBootstrap } from '@nx-ms/ms-composition/src/core/app-bootstrap';
 
-appBootstrap();
+const app = appBootstrap();
+
+export default app;

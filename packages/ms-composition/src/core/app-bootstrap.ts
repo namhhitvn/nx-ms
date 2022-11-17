@@ -10,7 +10,7 @@ import { AppEnvironment } from './app-environment';
 
 export interface AppBootstrapOptions {
   // app options
-  appAutoListen?: boolean; // default: true
+  appAutoListen?: boolean; // default: false
   appPort?: number; // default: process.env.APP_PORT || process.env.PORT || 3333
   appHost?: string; // default: process.env.APP_HOST || process.env.HOST || 0.0.0.0
 
@@ -58,6 +58,9 @@ export function appBootstrap(
   const app = express();
 
   (AppEnvironment.instance as WithWritable<AppEnvironment>).bootstrapOptions = options;
+  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT = options.appPort || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT;
+  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST = options.appHost || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST;
+  app.set('environment', AppEnvironment.instance);
 
   // ref: https://github.com/pinojs/express-pino-logger
   if (options.usePinoHttp !== false) {
@@ -129,19 +132,29 @@ export function appBootstrap(
     options.useRouters.forEach((use) => use.assignRouter(app));
   }
 
-  if (options.appAutoListen !== false) {
-    const appPort = forceNumber(
-      options.appPort || process.env['APP_PORT'] || process.env['PORT'],
-      3333
-    );
-    const appHost = forceString(
-      options.appHost || process.env['APP_HOST'] || process.env['HOST'] || '0.0.0.0'
-    );
-
-    app.listen(appPort, appHost, function () {
+  if (options.appAutoListen) {
+    app.listen(AppEnvironment.instance.APP_PORT, AppEnvironment.instance.APP_HOST, function () {
       app.emit('bootstrap:listening');
-      console.log(`App listening on ${appHost}:${appPort}`);
+      console.log(`App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`);
     });
+  } else {
+    const originalListen = app.listen;
+    app.listen = function (...args: any[]) {
+      if (typeof args[args.length - 1] === 'function') {
+        const cb = args[args.length - 1];
+        args[args.length - 1] = function (...args: any[]) {
+          app.emit('bootstrap:listening');
+          return cb.call(this, args);
+        }
+      } else {
+        args.push(function () {
+          app.emit('bootstrap:listening');
+          console.log(`App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`);
+        });
+      }
+
+      return originalListen.call(this, args);
+    }
   }
 
   callback?.(app);

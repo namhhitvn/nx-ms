@@ -13,6 +13,7 @@ import {
   toJS,
   Tree,
   updateJson,
+  readProjectConfiguration,
   updateProjectConfiguration,
 } from '@nrwl/devkit';
 import { Linter } from '@nrwl/linter';
@@ -89,17 +90,30 @@ function addAppFiles(tree: Tree, options: NormalizedSchema) {
 }
 
 function addAppProject(tree: Tree, options: NormalizedSchema) {
+  const nodeProjectConfig = readProjectConfiguration(tree, options.name);
+
   const project: ProjectConfiguration = {
     root: options.appProjectRoot,
     sourceRoot: joinPathFragments(options.appProjectRoot, 'src'),
     projectType: 'application',
     targets: {
+      ...nodeProjectConfig.targets,
+      build: getBuildConfig(options),
       serve: getServeConfig(options),
     },
     tags: options.parsedTags,
   };
 
   updateProjectConfiguration(tree, options.name, project);
+}
+
+function getBuildConfig(options: NormalizedSchema): TargetConfiguration {
+  return {
+    executor: 'nx:run-commands',
+    options: {
+      command: `tsc -p ${options.appProjectRoot}/tsconfig.app.json`,
+    },
+  };
 }
 
 function getServeConfig(options: NormalizedSchema): TargetConfiguration {
