@@ -21,6 +21,8 @@ services:
     extends:
       file: ./docker-compose.example-todo.yml
       service: nx-ms_example-todo-client
+    environment:
+      - NODE_ENV=development
     entrypoint: nx run example-todo-client:serve:development
 
 volumes:

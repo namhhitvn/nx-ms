@@ -41,7 +41,6 @@ services:
       - APP_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
       - APP_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
       - MONGO_URI=$EXAMPLE_TODO_MONGO_URI
-      - MONGO_URI=$EXAMPLE_TODO_MONGO_URI
       - MONGO_HOST=$EXAMPLE_TODO_MONGO_HOST
       - MONGO_PORT=$EXAMPLE_TODO_MONGO_PORT
       - MONGO_USER=$EXAMPLE_TODO_MONGO_USER
@@ -59,14 +58,14 @@ services:
     volumes:
       - ../../:/app
     environment:
-      - NODE_ENV=${EXAMPLE_TODO_APP_CLIENT_NODE_ENV:-dev}
+      - NODE_ENV=production
       - APP_HOST=${EXAMPLE_TODO_APP_CLIENT_HOST:-nx-ms_example-todo-client}
       - APP_PORT=${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}
       - APP_API_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
       - APP_API_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
     ports:
       - ${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}:4200
-    entrypoint: nx run example-todo-client:serve:production
+    entrypoint: bash -c "nx run example-todo-client:build:production && nx run example-todo-client:serve:production"
 
 volumes:
   example_todo_db_data:
