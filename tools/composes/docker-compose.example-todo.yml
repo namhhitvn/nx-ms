@@ -52,21 +52,21 @@ services:
       - ${MYORG_APP_SERVER_DEBUG_PORT:-9229}:9229
     entrypoint: nx run example-todo-rest:serve:production
 
-  # nx-ms_example-todo-client:
-  #   container_name: nx-ms_example-todo-client
-  #   build:
-  #     context: ../infrastructure/node
-  #   volumes:
-  #     - ../../:/app
-  #   environment:
-  #     - NODE_ENV=${MYORG_APP_CLIENT_NODE_ENV:-production}
-  #     - APP_HOST=${EXAMPLE_TODO_APP_CLIENT_HOST:-nx-ms_example-todo-client}
-  #     - APP_PORT=${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}
-  #     - APP_API_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
-  #     - APP_API_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
-  #   ports:
-  #     - ${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}:4200
-  #   entrypoint: nx run example-todo-client:serve:production
+  nx-ms_example-todo-client:
+    container_name: nx-ms_example-todo-client
+    build:
+      context: ../infrastructure/node
+    volumes:
+      - ../../:/app
+    environment:
+      - NODE_ENV=${EXAMPLE_TODO_APP_CLIENT_NODE_ENV:-dev}
+      - APP_HOST=${EXAMPLE_TODO_APP_CLIENT_HOST:-nx-ms_example-todo-client}
+      - APP_PORT=${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}
+      - APP_API_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
+      - APP_API_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
+    ports:
+      - ${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}:4200
+    entrypoint: nx run example-todo-client:serve:production
 
 volumes:
   example_todo_db_data:
