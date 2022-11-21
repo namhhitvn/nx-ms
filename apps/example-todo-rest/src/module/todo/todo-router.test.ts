@@ -9,7 +9,7 @@ describe('Test todo api', function () {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body.data).toBeInstanceOf(Array);
     expect(response.body.data[0]).toBeInstanceOf(Object);
-    expect(typeof response.body.data[0].name).toEqual('string');
+    expect(typeof response.body.data[0].title).toEqual('string');
     expect(response.statusCode).toEqual(200);
   });
 

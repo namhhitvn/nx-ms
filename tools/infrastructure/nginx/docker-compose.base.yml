@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  gateway:
+    build:
+      context: .
+    # volumes:
+    #   - ./conf.d:/etc/nginx/conf.d
+    #   - ./templates:/etc/nginx/templates
+    #   - ./nginx.conf:/etc/nginx/nginx.conf
+    # ports:
+    #   - 80:80
+    #   - 443:443

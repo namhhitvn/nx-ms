@@ -11,6 +11,11 @@ export class AppEnvironment {
 
   public readonly bootstrapOptions!: AppBootstrapOptions;
 
+  public get isDevelopment() {
+    return this.NODE_ENV === 'development';
+  }
+
+  public readonly NODE_ENV = process.env['NODE_ENV'];
   public readonly RES_ERROR_DETAIL = !(process.env['NODE_ENV'] === 'production');
 
   public readonly APP_PORT = forceNumber(process.env['APP_PORT'] || process.env['PORT'], 3333);

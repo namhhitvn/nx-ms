@@ -1,0 +1,72 @@
+version: '3.4'
+name: nx-ms
+services:
+  nx-ms_example-todo-db:
+    container_name: nx-ms_example-todo-db
+    build:
+      context: ../infrastructure/mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${EXAMPLE_TODO_MONGO_USER:-root}
+      - MONGO_INITDB_ROOT_PASSWORD=${EXAMPLE_TODO_MONGO_PASS:-root}
+      - MONGO_INITDB_DATABASE=${EXAMPLE_TODO_MONGO_NAME:-exampleTodo}
+    volumes:
+      - example_todo_db_data:/data/db
+    ports:
+      - 27017:27017
+
+  nx-ms_example-todo-gateway:
+    container_name: nx-ms_example-todo-gateway
+    extends:
+      file: ../infrastructure/nginx/docker-compose.base.yml
+      service: gateway
+    environment:
+      - APP_API_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
+      - APP_API_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
+      - APP_HOST=${EXAMPLE_TODO_APP_CLIENT_HOST:-nx-ms_example-todo-client}
+      - APP_PORT=${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}
+    volumes:
+      - ./nginx/example-todo/templates:/etc/nginx/templates
+    ports:
+      - 80:80
+      - 443:443
+
+  nx-ms_example-todo-server:
+    container_name: nx-ms_example-todo-server
+    build:
+      context: ../infrastructure/node
+    volumes:
+      - ../../:/app
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - APP_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
+      - APP_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
+      - MONGO_URI=$EXAMPLE_TODO_MONGO_URI
+      - MONGO_URI=$EXAMPLE_TODO_MONGO_URI
+      - MONGO_HOST=$EXAMPLE_TODO_MONGO_HOST
+      - MONGO_PORT=$EXAMPLE_TODO_MONGO_PORT
+      - MONGO_USER=$EXAMPLE_TODO_MONGO_USER
+      - MONGO_PASS=$EXAMPLE_TODO_MONGO_PASS
+      - MONGO_NAME=$EXAMPLE_TODO_MONGO_NAME
+    ports:
+      - ${EXAMPLE_TODO_APP_SERVER_PORT:-3333}:3333
+      - ${MYORG_APP_SERVER_DEBUG_PORT:-9229}:9229
+    entrypoint: nx run example-todo-rest:serve:production
+
+  # nx-ms_example-todo-client:
+  #   container_name: nx-ms_example-todo-client
+  #   build:
+  #     context: ../infrastructure/node
+  #   volumes:
+  #     - ../../:/app
+  #   environment:
+  #     - NODE_ENV=${MYORG_APP_CLIENT_NODE_ENV:-production}
+  #     - APP_HOST=${EXAMPLE_TODO_APP_CLIENT_HOST:-nx-ms_example-todo-client}
+  #     - APP_PORT=${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}
+  #     - APP_API_HOST=${EXAMPLE_TODO_APP_SERVER_HOST:-nx-ms_example-todo-server}
+  #     - APP_API_PORT=${EXAMPLE_TODO_APP_SERVER_PORT:-3333}
+  #   ports:
+  #     - ${EXAMPLE_TODO_APP_CLIENT_PORT:-4200}:4200
+  #   entrypoint: nx run example-todo-client:serve:production
+
+volumes:
+  example_todo_db_data:

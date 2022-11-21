@@ -16,3 +16,5 @@ interface Constructor<T = any> {
   new (...args: any[]): T;
   prototype: T;
 }
+
+type PromiseAble<T> = T | Promise<T>;

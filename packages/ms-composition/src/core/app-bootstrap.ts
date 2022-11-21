@@ -1,4 +1,3 @@
-import { forceNumber, forceString } from '@nx-ms/common';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
@@ -58,8 +57,10 @@ export function appBootstrap(
   const app = express();
 
   (AppEnvironment.instance as WithWritable<AppEnvironment>).bootstrapOptions = options;
-  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT = options.appPort || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT;
-  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST = options.appHost || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST;
+  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT =
+    options.appPort || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_PORT;
+  (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST =
+    options.appHost || (AppEnvironment.instance as WithWritable<AppEnvironment>).APP_HOST;
   app.set('environment', AppEnvironment.instance);
 
   // ref: https://github.com/pinojs/express-pino-logger
@@ -135,7 +136,9 @@ export function appBootstrap(
   if (options.appAutoListen) {
     app.listen(AppEnvironment.instance.APP_PORT, AppEnvironment.instance.APP_HOST, function () {
       app.emit('bootstrap:listening');
-      console.log(`App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`);
+      console.log(
+        `App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`
+      );
     });
   } else {
     const originalListen = app.listen;
@@ -144,17 +147,19 @@ export function appBootstrap(
         const cb = args[args.length - 1];
         args[args.length - 1] = function (...args: any[]) {
           app.emit('bootstrap:listening');
-          return cb.call(this, args);
-        }
+          return cb.apply(this, args);
+        };
       } else {
         args.push(function () {
           app.emit('bootstrap:listening');
-          console.log(`App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`);
+          console.log(
+            `App listening on ${AppEnvironment.instance.APP_HOST}:${AppEnvironment.instance.APP_PORT}`
+          );
         });
       }
 
-      return originalListen.call(this, args);
-    }
+      return originalListen.apply(this, args as any);
+    };
   }
 
   callback?.(app);

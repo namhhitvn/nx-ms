@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [100, 120, 180, 80],
+  "scm.alwaysShowRepositories": true,
+  "git.autoStash": true,
+  "git.fetchOnPull": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/Thumbs.db": true
+  },
+  "files.associations": {
+    "**/templates/*.conf.template": "nginx",
+    "**/.env*": "shellscript"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

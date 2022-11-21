@@ -40,9 +40,18 @@ export namespace MSCore {
     ReqMetadata extends RequestMetadata = RequestMetadata
   > {
     (
-      req: Request<Params, ResBody, Body, Query, Locals, ReqMetadata>,
+      req: Request<ResBody, Params, Body, Query, Locals, ReqMetadata>,
       res: Response<ResBody, Locals>,
       next: NextFunction
     ): void;
   }
+
+  export type RequestHandlerParameters<
+    ResBody = ObjectLiteral,
+    Params = ObjectLiteral,
+    Body = ObjectLiteral,
+    Query = ObjectLiteral,
+    Locals extends Record<string, any> = Record<string, any>,
+    ReqMetadata extends RequestMetadata = RequestMetadata
+  > = Parameters<RequestHandler<ResBody, Params, Body, Query, Locals, ReqMetadata>>;
 }

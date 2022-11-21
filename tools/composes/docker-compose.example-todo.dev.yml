@@ -1,0 +1,27 @@
+version: '3.4'
+name: nx-ms
+services:
+  nx-ms_example-todo-db:
+    extends:
+      file: ./docker-compose.example-todo.yml
+      service: nx-ms_example-todo-db
+
+  nx-ms_example-todo-gateway:
+    extends:
+      file: ./docker-compose.example-todo.yml
+      service: nx-ms_example-todo-gateway
+
+  nx-ms_example-todo-server:
+    extends:
+      file: ./docker-compose.example-todo.yml
+      service: nx-ms_example-todo-server
+    entrypoint: nx run example-todo-rest:serve:development
+
+  # nx-ms_example-todo-client:
+  #   extends:
+  #     file: ./docker-compose.example-todo.yml
+  #     service: nx-ms_example-todo-client
+  #   entrypoint: nx run example-todo-client:serve:development
+
+volumes:
+  example_todo_db_data:

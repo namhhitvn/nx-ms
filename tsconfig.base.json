@@ -18,6 +18,8 @@
     "paths": {
       "@nx-ms/common": ["packages/common/src/index.ts"],
       "@nx-ms/common/src/*": ["packages/common/src/*"],
+      "@nx-ms/example-todo-shared": ["packages/example-todo-shared/src/index.ts"],
+      "@nx-ms/example-todo-shared/src/*": ["packages/example-todo-shared/src/*"],
       "@nx-ms/ms-composition": ["packages/ms-composition/src/index.ts"],
       "@nx-ms/ms-composition/src/*": ["packages/ms-composition/src/*"]
     }
